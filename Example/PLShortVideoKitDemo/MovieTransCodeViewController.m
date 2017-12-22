@@ -50,6 +50,8 @@ PLSSelectionViewDelegate
 @property (assign, nonatomic) PLSFilePreset transcoderPreset;
 @property (strong, nonatomic) PLShortVideoTranscoder *shortVideoTranscoder;
 @property (assign, nonatomic) PLSPreviewOrientation rotateOrientation;
+@property (strong, nonatomic) PLSMovieComposer *composer;
+
 
 @end
 
@@ -303,14 +305,17 @@ PLSSelectionViewDelegate
     // 比如选取 [startTime, endTime] 这段视频来转码输出
     CMTimeRange timeRange = CMTimeRangeFromTimeToTime(CMTimeMake(self.startTime, 1), CMTimeMake(self.endTime, 1));
 
-    self.shortVideoTranscoder = [[PLShortVideoTranscoder alloc] initWithURL:self.url];
-    self.shortVideoTranscoder.outputFileType = PLSFileTypeMPEG4;
-    self.shortVideoTranscoder.outputFilePreset = self.transcoderPreset;
-    self.shortVideoTranscoder.timeRange = timeRange;
-    self.shortVideoTranscoder.rotateOrientation = self.rotateOrientation;
-    [self.shortVideoTranscoder startTranscoding];
+    self.composer = [[PLSMovieComposer alloc] initWithUrls:@[self.url]];
+    [self.composer startComposing];
     
-    [self.shortVideoTranscoder setCompletionBlock:^(NSURL *url){
+//    self.shortVideoTranscoder = [[PLShortVideoTranscoder alloc] initWithURL:self.url];
+//    self.shortVideoTranscoder.outputFileType = PLSFileTypeMPEG4;
+//    self.shortVideoTranscoder.outputFilePreset = self.transcoderPreset;
+//    self.shortVideoTranscoder.timeRange = timeRange;
+//    self.shortVideoTranscoder.rotateOrientation = self.rotateOrientation;
+//    [self.shortVideoTranscoder startTranscoding];
+    
+    [self.composer setCompletionBlock:^(NSURL *url){
 
         NSLog(@"transCoding successd, url: %@", url);
         
@@ -329,7 +334,7 @@ PLSSelectionViewDelegate
         });
     }];
     
-    [self.shortVideoTranscoder setFailureBlock:^(NSError *error){
+    [self.composer setFailureBlock:^(NSError *error){
         
         NSLog(@"transCoding failed: %@", error);
         
@@ -339,7 +344,7 @@ PLSSelectionViewDelegate
         });
     }];
     
-    [self.shortVideoTranscoder setProcessingBlock:^(float progress){
+    [self.composer setProcessingBlock:^(float progress){
         // 更新压缩进度的 UI
         NSLog(@"transCoding progress: %f", progress);
         weakSelf.progressLabel.text = [NSString stringWithFormat:@"转码进度%d%%", (int)(progress * 100)];
@@ -349,6 +354,18 @@ PLSSelectionViewDelegate
 #pragma mark -- 计算文件的大小，单位为 M
 - (CGFloat)fileSize:(NSURL *)url {
     return [[NSData dataWithContentsOfURL:url] length] / 1024.00 / 1024.00;
+}
+
+- (CGSize)transcodeSize:(CGSize)size {
+    
+    CGFloat ratio = sqrt(size.width * size.height / (540 * 960));
+    if (ratio > 1) {
+        return CGSizeMake(ceil(size.width / ratio), ceil(size.height / ratio));
+    } else {
+        return size;
+    }
+    
+    
 }
 
 #pragma mark -- 获取视频／音频文件的总时长

@@ -2265,7 +2265,7 @@
 				TargetAttributes = {
 					0A94357B1E6CA2E2008845A3 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = GDFHW66V92;
+						DevelopmentTeam = T73C493RUF;
 						ProvisioningStyle = Automatic;
 					};
 				};
@@ -2875,7 +2875,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				DEVELOPMENT_TEAM = GDFHW66V92;
+				DEVELOPMENT_TEAM = T73C493RUF;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2909,7 +2909,7 @@
 			baseConfigurationReference = 85B60FAE619932ED649E6840 /* Pods-PLShortVideoKitDemo.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = GDFHW66V92;
+				DEVELOPMENT_TEAM = T73C493RUF;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
